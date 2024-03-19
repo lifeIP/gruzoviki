@@ -58,23 +58,44 @@ export default function MyHeader({selectedTheme, changeTheme}) {
     }
 
     function RenderSocialNetworks(){
-        return (
-            <Box component="span">
-                <IconButton sx={{height: 40, width: 40}} >
-                    <VkSvg />
-                </IconButton>
-                <IconButton sx={{height: 40, width: 40}}>
-                    <TgSvg />
-                </IconButton>
-                <IconButton sx={{height: 40, width: 40}}
-                onClick={()=>{
-                    changeTheme();
-                }}
-                >
-                    <MoonSvg/>
-                </IconButton>
-            </Box>
-        );
+        if(selectedTheme){
+            return (
+                <Box component="span">
+                    <IconButton sx={{height: 40, width: 40}} >
+                        <VkSvg />
+                    </IconButton>
+                    <IconButton sx={{height: 40, width: 40}}>
+                        <TgSvg />
+                    </IconButton>
+                    <IconButton sx={{height: 40, width: 40}}
+                    onClick={()=>{
+                        changeTheme();
+                    }}
+                    >
+                        <MoonSvg/>
+                    </IconButton>
+                </Box>
+            );
+        }
+        else{
+            return (
+                <Box component="span">
+                    <IconButton sx={{height: 40, width: 40}} >
+                        <VkSvg />
+                    </IconButton>
+                    <IconButton sx={{height: 40, width: 40}}>
+                        <TgSvg />
+                    </IconButton>
+                    <IconButton sx={{height: 40, width: 40}}
+                    onClick={()=>{
+                        changeTheme();
+                    }}
+                    >
+                        <MoonSvg/>
+                    </IconButton>
+                </Box>
+            );
+        }
     }
 
     function RenderRightPanel(){
