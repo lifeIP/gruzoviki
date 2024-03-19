@@ -1,10 +1,14 @@
+import "./App.css";
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Cookies, useCookies } from 'react-cookie';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import MyHeader from './components/MyHeader';
+import MyHeader from './components/Header/MyHeader';
+import mySvg from './back.svg';
+
 
 const darkTheme = createTheme({
   palette: {
@@ -40,28 +44,16 @@ function App() {
   }
 
   return (
-    <ThemeProvider theme={selectedTheme}>
-      <MyHeader selectedTheme={selectedTheme == lightTheme ? true:false} changeTheme={changeTheme}/>
-      <div className="App">
-        <Button  
-          onClick={() => {
-            changeTheme();
-            console.log(cookies.theme);
-          }}
-          variant="chtheme"
-        >
-          Change theme
-        </Button>
-        <Button  
-        onClick={() => {
-          console.log(cookies.theme);
-        }}
-        variant="chtheme">Change theme</Button>
-
-      </div>
-      <CssBaseline />
+    <div>
+      <ThemeProvider theme={selectedTheme}>
+        <Box sx={{backgroundImage: `url(${mySvg})`, backgroundSize: "cover", width: "100vw", height: "100vh"}}> 
+          <MyHeader selectedTheme={selectedTheme == lightTheme ? true:false} changeTheme={changeTheme}/>
+          <CssBaseline />
+        </Box>
+        <Box sx={{height: 150}}></Box>
+      </ThemeProvider>
       
-    </ThemeProvider>
+    </div>
   );
 }
 
