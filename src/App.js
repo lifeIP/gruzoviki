@@ -7,7 +7,10 @@ import { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import MyHeader from './components/Header/MyHeader';
+import Slider from './components/Slider/MySlider'
+
 import mySvg from './back.png';
+
 
 
 const darkTheme = createTheme({
@@ -48,9 +51,12 @@ function App() {
       <ThemeProvider theme={selectedTheme}>
         <Box sx={{backgroundImage: `url(${mySvg})`, backgroundSize: "cover", width: "98.9vw", height: "100vh"}}> 
           <MyHeader selectedTheme={selectedTheme == lightTheme ? true:false} changeTheme={changeTheme}/>
-          <CssBaseline />
+        </Box>
+        <Box sx={{marginTop: "1.8vh"}}>
+          <Slider/>
         </Box>
         <Box sx={{height: 150}}></Box>
+        <CssBaseline />
       </ThemeProvider>
       
     </div>
