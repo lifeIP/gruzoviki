@@ -1,0 +1,15 @@
+{
+    "number_of_slides": 2,
+    "slides":[{
+        "id": 0,
+        "header": "Рефрижераторный",
+        "text": "Фургон с возможностью создания и поддержания определенного температурного режима",
+        "foto": "https://static.tildacdn.com/tild3433-3034-4465-b338-623263653534/img_bb.jpg"
+    }, {
+        "id": 1,
+        "header": "Не Рефрижераторный",
+        "text": "Фургон без возможностью создания и поддержания определенного температурного режима",
+        "foto": "https://maina.club/uploads/posts/2023-07/thumbs/1688762814_maina-club-p-gruzovoi-furgon-47508a-vkontakte-20.jpg"
+    }]
+
+}
