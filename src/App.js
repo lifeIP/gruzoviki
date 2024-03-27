@@ -17,6 +17,10 @@ import Profile from "./components/Profile";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Login, Registration } from "./components/Form/MyForm";
 import ExitPage from "./components/ExitPage";
+import AboutUs from "./components/AboutUs";
+
+
+import mySvg from './back_about.png';
 
 
 const darkTheme = createTheme({
@@ -86,6 +90,17 @@ function App() {
                 <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
               </div>
             } />
+            <Route path="/about" element={
+              
+              <Box sx={{ backgroundImage: `url(${mySvg})`, backgroundSize: "cover", width: "100vw", height: "100vh" }}>
+              <Box sx={{backgroundColor:"#18181899"}}>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <AboutUs/>
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                </Box>
+              </Box>
+            } />
+            
           </Routes>
         </BrowserRouter>
         <CssBaseline />

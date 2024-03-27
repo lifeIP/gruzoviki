@@ -175,7 +175,7 @@ export default function MyHeader({ selectedTheme, changeTheme }) {
                     <Button sx={{ color: "#000000" }}><Typography variant="h7" gutterBottom>Калькулятор</Typography></Button>
                     <Button sx={{ color: "#000000" }} onClick={()=>{navigate('/profile');}}><Typography variant="h7" gutterBottom>Профиль</Typography></Button>
                     <Button sx={{ color: "#000000" }}><Typography variant="h7" gutterBottom>Заказы</Typography></Button>
-                    <Button sx={{ color: "#000000" }}><Typography variant="h7" gutterBottom>О нас</Typography></Button>
+                    <Button sx={{ color: "#000000" }} onClick={()=>{navigate('/about');}}><Typography variant="h7" gutterBottom>О нас</Typography></Button>
                     <LoginLabel />
                 </Box>
             );
@@ -186,7 +186,7 @@ export default function MyHeader({ selectedTheme, changeTheme }) {
                     <Button sx={{ color: "#FFFFFF" }}><Typography variant="h7" gutterBottom>Калькулятор</Typography></Button>
                     <Button sx={{ color: "#FFFFFF" }} onClick={()=>{navigate('/profile');}}><Typography variant="h7" gutterBottom>Профиль</Typography></Button>
                     <Button sx={{ color: "#FFFFFF" }}><Typography variant="h7" gutterBottom>Заказы</Typography></Button>
-                    <Button sx={{ color: "#FFFFFF" }}><Typography variant="h7" gutterBottom>О нас</Typography></Button>
+                    <Button sx={{ color: "#FFFFFF" }} onClick={()=>{navigate('/about');}}><Typography variant="h7" gutterBottom>О нас</Typography></Button>
                     <LoginLabel />
                 </Box>
             );
