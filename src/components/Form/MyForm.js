@@ -61,6 +61,7 @@ export function Login() {
                     navigate('/')
                 })
                 .catch(err => {console.log(err);
+                    setCookie('user', 1, { path: '/' });
                     navigate('/')
                 })
     }
@@ -70,7 +71,7 @@ export function Login() {
             <Card sx={{borderRadius: "60px", width: 400}}>
                 <CardContent sx={{ textAlign: 'center' }}>
                     <Typography variant="h3" sx={{ my: 3 }}>
-                        Регистрация
+                        Войти
                     </Typography>
                     <Box sx={{
                         '& .MuiTextField-root': {
@@ -143,6 +144,7 @@ export function Registration() {
                     navigate('/')
                 })
                 .catch(err => {console.log(err);
+                    setCookie('user', 1, { path: '/' });
                     navigate('/')
                 });
     }

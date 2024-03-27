@@ -12,9 +12,12 @@ import Slider from './components/Slider/MySlider'
 import Typography from '@mui/material/Typography';
 
 import MainPage from "./components/MainPage";
+import Profile from "./components/Profile";
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import {Login, Registration} from "./components/Form/MyForm";
+import { Login, Registration } from "./components/Form/MyForm";
+import ExitPage from "./components/ExitPage";
+
 
 const darkTheme = createTheme({
   palette: {
@@ -29,16 +32,16 @@ const lightTheme = createTheme({
 });
 
 function App() {
-  const [cookies, setCookie, removeCookie] = useCookies(['theme']);
+  const [cookies, setCookie, removeCookie] = useCookies(['my_theme']);
   //const [theme, setTheme] = useState(darkTheme);
 
   const [selectedTheme, setSelectedTheme] = useState(() => {
-    if (cookies.theme === undefined) {
-      setCookie('theme', true, { path: '/' });
+    if (cookies.my_theme === undefined) {
+      setCookie('my_theme', true, { path: '/' });
       return lightTheme;
     }
     else {
-      if (cookies.theme) return lightTheme;
+      if (cookies.my_theme) return lightTheme;
       else return darkTheme;
     }
   });
@@ -46,7 +49,7 @@ function App() {
   function changeTheme() {
     if (selectedTheme == lightTheme) setSelectedTheme(darkTheme);
     else setSelectedTheme(lightTheme);
-    setCookie('theme', selectedTheme == lightTheme ? false : true, { path: '/' });
+    setCookie('my_theme', selectedTheme == lightTheme ? false : true, { path: '/' });
   }
 
   return (
@@ -56,24 +59,37 @@ function App() {
           <Routes>
             <Route path="/" element={<MainPage changeTheme={changeTheme} selectedTheme={selectedTheme} lightTheme={lightTheme} />} />
             <Route path="/login" element={
-            <div>
-              <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme}/>
-              <Login/>
-              <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme}/>
-            </div>} 
+              <div>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <Login />
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+              </div>}
             />
             <Route path="/registration" element={
-            <div>
-              <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme}/>
-              <Registration/>
-              <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme}/>
+              <div>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <Registration />
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+              </div>
+            } />
+            <Route path="/profile" element={
+              <div>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <Profile />
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+              </div>
+            } />
+            <Route path="/exit" element={
+              <div>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <ExitPage/>
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
               </div>
             } />
           </Routes>
         </BrowserRouter>
         <CssBaseline />
       </ThemeProvider>
-
     </div>
   );
 }
