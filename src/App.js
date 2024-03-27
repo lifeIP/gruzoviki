@@ -11,9 +11,10 @@ import MyFooter from "./components/Footer/MyFooter";
 import Slider from './components/Slider/MySlider'
 import Typography from '@mui/material/Typography';
 
-import Page1 from "./components/Page1";
+import MainPage from "./components/MainPage";
 
-
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {Login, Registration} from "./components/Form/MyForm";
 
 const darkTheme = createTheme({
   palette: {
@@ -51,11 +52,26 @@ function App() {
   return (
     <div>
       <ThemeProvider theme={selectedTheme}>
-        <Page1 changeTheme={changeTheme}  selectedTheme={selectedTheme} lightTheme={lightTheme}/>
-        
-
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<MainPage changeTheme={changeTheme} selectedTheme={selectedTheme} lightTheme={lightTheme} />} />
+            <Route path="/login" element={
+            <div>
+              <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme}/>
+              <Login/>
+              <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme}/>
+            </div>} 
+            />
+            <Route path="/registration" element={
+            <div>
+              <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme}/>
+              <Registration/>
+              <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme}/>
+              </div>
+            } />
+          </Routes>
+        </BrowserRouter>
         <CssBaseline />
-        
       </ThemeProvider>
 
     </div>

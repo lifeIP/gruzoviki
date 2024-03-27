@@ -6,7 +6,7 @@ import { ReactComponent as VkSvg } from './vk.svg';
 import { ReactComponent as TgSvg } from './tg.svg';
 import { ReactComponent as VkLightSvg } from './vk.svg';
 import { ReactComponent as TgLightSvg } from './tg_light.svg';
-
+import {useNavigate} from 'react-router'
 
 export default function MyFooter({ selectedTheme, changeTheme }) {
 
@@ -101,9 +101,10 @@ export default function MyFooter({ selectedTheme, changeTheme }) {
         }
     }
 
+    const navigate = useNavigate()
+
     return (
         <Box
-
             component="span"
             m={0}
             display="flex"
@@ -116,7 +117,7 @@ export default function MyFooter({ selectedTheme, changeTheme }) {
                 minHeight="10vh"
             >
                 <Box component="div" sx={{ marginLeft: 8, display: 'inline' }}>
-                    <Button>
+                    <Button onClick={()=>{navigate('/');}}>
                         <RenderLogo />
                     </Button>
                 </Box>

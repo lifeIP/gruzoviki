@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import { SvgIcon, Button, IconButton } from "@mui/material"; 
 import Typography from '@mui/material/Typography';
 
+import {useNavigate} from 'react-router'
 
 export default function MyHeader({selectedTheme, changeTheme}) {
 
@@ -144,6 +145,7 @@ export default function MyHeader({selectedTheme, changeTheme}) {
         }
     }
 
+    const navigate = useNavigate()
   return (
     <Box 
     
@@ -159,7 +161,7 @@ export default function MyHeader({selectedTheme, changeTheme}) {
         minHeight="10vh"
         >
             <Box component="div" sx={{ marginLeft: 8, display: 'inline' }}>
-                <Button>
+                <Button onClick={()=>{navigate('/');}}>
                     <RenderLogo/>
                 </Button>
             </Box>

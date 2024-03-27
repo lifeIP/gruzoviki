@@ -20,10 +20,10 @@ let slide_img1 = require('./norefregerator.png');
 
 function Slide({slide}){
     return(
-        <Card sx={{ maxWidth: "70vw", maxHeight: "70vh", display: 'flex', borderRadius: "60px", alignItems: 'center', justifyContent: 'center' }}>
+        <Card sx={{ maxWidth: "70vw", height: "50vh", display: 'flex', borderRadius: "60px", alignItems: 'center', justifyContent: 'center' }}>
              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <CardMedia 
-                sx={{ flex: '1 0 auto' }}
+                sx={{ flex: '1 0 auto', width: "40vw",}}
                 component="img"
                 alt="mashina"
                 image={json_data.slides.at(slide).foto}
@@ -60,7 +60,7 @@ export default function Slider(){
     return(
         <Grid container spacing={0}>
             <Grid item xs={2}>
-                <Box sx={{float: "right", height: "70vh", marginRight: "15px"}}>
+                <Box sx={{float: "right", height: "60vh", marginRight: "15px"}}>
                     <IconButton onClick={()=>{changeSlide(-1)}} sx={{marginTop: "30vh"}}>
                         <ArrowBackIosNewIcon/>
                     </IconButton>
@@ -72,7 +72,7 @@ export default function Slider(){
                 </Box>
             </Grid>
             <Grid item xs={2}>
-                <Box sx={{float: "left", height: "70vh"}}>
+                <Box sx={{float: "left", height: "60vh"}}>
                     <IconButton onClick={()=>{changeSlide(1)}} sx={{marginTop: "30vh", marginLeft: "15px"}}>
                         <ArrowForwardIosIcon/>
                     </IconButton>
