@@ -2,12 +2,19 @@ import React, { useEffect } from 'react'
 import { Button, Card, CardContent, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import useForm from '../hooks/useForm'
+
+import { useNavigate } from 'react-router'
 import { Grid } from '@mui/material'
 import { Cookies, useCookies } from 'react-cookie';
 import axios from 'axios'
 
 
-import {useNavigate} from 'react-router'
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
+
 
 
 const getFreshModel = () => ({
@@ -33,7 +40,7 @@ function Center(props) {
 }
 
 export function Login() {
-    const [cookies, setCookie, removeCookie] = useCookies(['login']);
+    const [cookies, setCookie, removeCookie] = useCookies(['login', 'role']);
     const navigate = useNavigate()
 
     const {
@@ -58,10 +65,12 @@ export function Login() {
             axios.post("http://localhost:5041/login/", values)
                 .then(res => {
                     setCookie('user', res, { path: '/' });
+                    setCookie('role', res.role, { path: '/' });
                     navigate('/')
                 })
                 .catch(err => {console.log(err);
                     setCookie('user', 1, { path: '/' });
+                    setCookie('role', 0, { path: '/' });
                     navigate('/')
                 })
     }
@@ -209,5 +218,313 @@ export function Registration() {
                 </CardContent>
             </Card>
         </Center>
+    );
+}
+
+
+export function Order() {
+    const navigate = useNavigate()
+    const getFreshModel = () => ({
+        type: '',
+        tonaz: '',
+        a: '',
+        b: '',
+        type_of_machina: '',
+    })
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange
+    } = useForm(getFreshModel);
+
+    // const validate = () => {
+    //     let temp = {}
+    //     temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Некоректный адрес"
+    //     temp.password = values.password != "" ? "" : "Это обязательное поле"
+    //     setErrors(temp)
+    //     return Object.values(temp).every(x => x == "")
+    // }
+
+    const order = e => {
+        e.preventDefault();
+        if (1)
+            axios.post("http://localhost:5041/order/", values)
+                .then(res => {
+                    navigate('/')
+                })
+                .catch(err => {console.log(err);
+                    navigate('/')
+                });
+    }
+
+    const [type, setType] = React.useState('');
+
+    const handleChange = (event) => {
+        setType(event.target.value);
+    };
+
+    return (
+        <Center>
+            <Card sx={{borderRadius: "60px", width: 400}}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                    <Typography variant="h3" sx={{ my: 3 }}>
+                        Заказ
+                    </Typography>
+                    <Box sx={{
+                        '& .MuiTextField-root': {
+                            m: 1,
+                            width: '90%'
+                        }
+                    }}>
+                        <form noValidate autoComplete="off" onSubmit={order}>
+                            <TextField
+                                label="Что перевозим?"
+                                name="type"
+                                value={values.type}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                {...(errors.type && { error: true, helperText: errors.type })} />
+                            <TextField
+                                label="Тоннаж"
+                                name="tonaz"
+                                value={values.tonaz}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                {...(errors.tonaz && { error: true, helperText: errors.tonaz })} />
+                            <TextField
+                                label="Точка отправления"
+                                name="a"
+                                value={values.a}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                {...(errors.a && { error: true, helperText: errors.a })} />
+                                
+                            <TextField
+                                label="Точка прибытия"
+                                name="b"
+                                value={values.b}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                {...(errors.b && { error: true, helperText: errors.b })} />
+
+                                <FormControl fullWidth sx={{m: 1, width: '90%'}}>
+                                <InputLabel id="type_of_machina">Выберете тип фургона</InputLabel>
+                                <Select
+                                    labelId=""
+                                    id="simple-select"
+                                    value={type}
+                                    label="type_of_mashina"
+                                    onChange={handleChange}
+                                >
+                                    <MenuItem value={10}>Изотермический</MenuItem>
+                                    <MenuItem value={20}>Тентованный</MenuItem>
+                                    <MenuItem value={30}>Рефрижератор</MenuItem>
+                                    <MenuItem value={40}>С увеличенной грузоподъемностью</MenuItem>
+                                </Select>
+                                </FormControl>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="large"
+                                sx={{ width: '90%' }}>ОФОРМИТЬ ЗАЯВКУ</Button>
+                        </form>
+                    </Box>
+                </CardContent>
+            </Card>
+        </Center>
+    );
+}
+
+export function BecomeDriver() {
+    const navigate = useNavigate()
+    const getFreshModel = () => ({
+        tonaz: '',
+        marka: '',
+        gosnumber: ''
+    })
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange
+    } = useForm(getFreshModel);
+
+    // const validate = () => {
+    //     let temp = {}
+    //     temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Некоректный адрес"
+    //     temp.password = values.password != "" ? "" : "Это обязательное поле"
+    //     setErrors(temp)
+    //     return Object.values(temp).every(x => x == "")
+    // }
+
+    const order = e => {
+        e.preventDefault();
+        if (1)
+            axios.post("http://localhost:5041/becomed_driver/", values)
+                .then(res => {
+                    navigate('/')
+                })
+                .catch(err => {console.log(err);
+                    navigate('/')
+                });
+    }
+
+    return (
+        <Center>
+            <Card sx={{borderRadius: "60px", width: 400}}>
+                <CardContent sx={{ textAlign: 'center' }}>
+                    <Typography variant="h4" sx={{ my: 3 }}>
+                    Хотите стать водителем?
+                    </Typography>
+                    <Typography variant="h5" sx={{ my: 3 }}>
+                    Заполните анкету
+                    </Typography>
+                    <Box sx={{
+                        '& .MuiTextField-root': {
+                            m: 1,
+                            width: '90%'
+                        }
+                    }}>
+                        <form noValidate autoComplete="off" onSubmit={order}>
+                            <TextField
+                                label="Тоннаж вашего тс"
+                                name="tonaz"
+                                value={values.tonaz}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                {...(errors.tonaz && { error: true, helperText: errors.tonaz })} />
+                            <TextField
+                                label="Марка тс"
+                                name="marka"
+                                value={values.marka}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                {...(errors.marka && { error: true, helperText: errors.marka })} />
+                                
+                            <TextField
+                                label="Гос. номер тс"
+                                name="gosnumber"
+                                value={values.gosnumber}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                {...(errors.gosnumber && { error: true, helperText: errors.gosnumber })} />
+
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="large"
+                                sx={{ width: '90%' }}>ОТПРАВИТЬ ЗАЯВКУ</Button>
+                        </form>
+                    </Box>
+                </CardContent>
+            </Card>
+        </Center>
+    );
+}
+
+function Center2(props) {
+    return (
+        <Grid container
+            direction="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{ minHeight: '100vh' }}>
+            <Grid item xs={1}>
+                {props.children}
+            </Grid>
+        </Grid>
+    )
+}
+
+export function ChangeUserData() {
+    const navigate = useNavigate()
+    const getFreshModel = () => ({
+        fio: '',
+        date: '',
+        city: '',
+        eas: "",
+    })
+
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange
+    } = useForm(getFreshModel);
+
+    // const validate = () => {
+    //     let temp = {}
+    //     temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Некоректный адрес"
+    //     temp.password = values.password != "" ? "" : "Это обязательное поле"
+    //     setErrors(temp)
+    //     return Object.values(temp).every(x => x == "")
+    // }
+
+    const order = e => {
+        e.preventDefault();
+        if (1)
+            axios.post("http://localhost:5041/user_data/", values)
+                .then(res => {
+                    navigate('/profile')
+                })
+                .catch(err => {console.log(err);
+                    navigate('/profile')
+                });
+    }
+
+    const [type, setType] = React.useState('');
+
+    const handleChange = (event) => {
+        setType(event.target.value);
+    };
+
+    return (
+        
+            <Center2>
+                <Card>
+                <CardContent sx={{ textAlign: 'center' }}>
+                    <Box sx={{
+                        '& .MuiTextField-root': {
+                            m: 1,
+                            width: '90%'
+                        }
+                    }}>
+                        <form noValidate autoComplete="off" onSubmit={order}>
+                            <TextField
+                                label="Фамилия Имя Отчество"
+                                name="fio"
+                                value={values.fio}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                            />
+                            
+                            <TextField
+                                label="Город"
+                                name="city"
+                                value={values.city}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                />
+                            <TextField
+                                label="Дата"
+                                name="date"
+                                value={values.date}
+                                onChange={handleInputChange}
+                                variant="outlined"
+                                />
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                size="large"
+                                sx={{ width: '90%' }}>Изменить</Button>
+                        </form>
+                    </Box>
+                </CardContent>
+                </Card>
+            </Center2>
     );
 }

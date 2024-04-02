@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router'
 import { Cookies, useCookies } from 'react-cookie';
 import { useState } from 'react';
 
+import PopUpWindow from '../CalculatingDistance/PopUpWindow'
+
 export default function MyHeader({ selectedTheme, changeTheme }) {
     const [cookies, setCookie, removeCookie] = useCookies(['user', 'my_theme']);
 
@@ -172,9 +174,12 @@ export default function MyHeader({ selectedTheme, changeTheme }) {
         if (cookies.my_theme) {
             return (
                 <Box component="div" sx={{ marginLeft: 8, display: 'inline' }}>
+                    <Button sx={{ color: "#000000" }}><Typography variant="h7" gutterBottom onClick={()=>{navigate('/becomed_driver');}}>Стать водителем</Typography></Button>
+                     <PopUpWindow trig={
                     <Button sx={{ color: "#000000" }}><Typography variant="h7" gutterBottom>Калькулятор</Typography></Button>
+                     }/>
                     <Button sx={{ color: "#000000" }} onClick={()=>{navigate('/profile');}}><Typography variant="h7" gutterBottom>Профиль</Typography></Button>
-                    <Button sx={{ color: "#000000" }}><Typography variant="h7" gutterBottom>Заказы</Typography></Button>
+                    <Button sx={{ color: "#000000" }} onClick={()=>{navigate('/order');}}><Typography variant="h7" gutterBottom>Заказы</Typography></Button>
                     <Button sx={{ color: "#000000" }} onClick={()=>{navigate('/about');}}><Typography variant="h7" gutterBottom>О нас</Typography></Button>
                     <LoginLabel />
                 </Box>
@@ -183,9 +188,13 @@ export default function MyHeader({ selectedTheme, changeTheme }) {
         else {
             return (
                 <Box component="div" sx={{ marginLeft: 8, display: 'inline' }}>
-                    <Button sx={{ color: "#FFFFFF" }}><Typography variant="h7" gutterBottom>Калькулятор</Typography></Button>
+                    <Button sx={{ color: "#FFFFFF" }}><Typography variant="h7" gutterBottom onClick={()=>{navigate('/becomed_driver');}}>Стать водителем</Typography></Button>
+                    <PopUpWindow trig={
+                        <Button sx={{ color: "#FFFFFF" }}><Typography variant="h7" gutterBottom>Калькулятор</Typography></Button>
+                    }/>
+                    
                     <Button sx={{ color: "#FFFFFF" }} onClick={()=>{navigate('/profile');}}><Typography variant="h7" gutterBottom>Профиль</Typography></Button>
-                    <Button sx={{ color: "#FFFFFF" }}><Typography variant="h7" gutterBottom>Заказы</Typography></Button>
+                    <Button sx={{ color: "#FFFFFF" }} onClick={()=>{navigate('/order');}}><Typography variant="h7" gutterBottom>Заказы</Typography></Button>
                     <Button sx={{ color: "#FFFFFF" }} onClick={()=>{navigate('/about');}}><Typography variant="h7" gutterBottom>О нас</Typography></Button>
                     <LoginLabel />
                 </Box>

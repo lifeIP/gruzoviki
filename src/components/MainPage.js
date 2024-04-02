@@ -7,8 +7,9 @@ import Slider from './Slider/MySlider'
 import Typography from '@mui/material/Typography';
 
 import mySvg from './back.png';
+import PopUpWindow from './CalculatingDistance/PopUpWindow';
 
-export default function Page1({changeTheme, selectedTheme, lightTheme}) {
+export default function Page1({ changeTheme, selectedTheme, lightTheme }) {
     return (
         <Box>
             <Box sx={{ backgroundImage: `url(${mySvg})`, backgroundSize: "cover", width: "98.9vw", height: "100vh" }}>
@@ -26,11 +27,13 @@ export default function Page1({changeTheme, selectedTheme, lightTheme}) {
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: "25.1vh" }}>
-                    <Button variant="contained" color="error">
-                        <Typography variant="h5">
-                            РАССЧИТАТЬ ДОСТАВКУ
-                        </Typography>
-                    </Button>
+                    <PopUpWindow trig={
+                        <Button variant="contained" color="error">
+                            <Typography variant="h5">
+                                РАССЧИТАТЬ ДОСТАВКУ
+                            </Typography>
+                        </Button>
+                    } />
                 </Box>
 
             </Box>

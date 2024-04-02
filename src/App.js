@@ -15,12 +15,14 @@ import MainPage from "./components/MainPage";
 import Profile from "./components/Profile";
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Login, Registration } from "./components/Form/MyForm";
+import { BecomeDriver, ChangeUserData, Login, Registration } from "./components/Form/MyForm";
 import ExitPage from "./components/ExitPage";
 import AboutUs from "./components/AboutUs";
 
+import { Order } from "./components/Form/MyForm";
 
 import mySvg from './back_about.png';
+
 
 
 const darkTheme = createTheme({
@@ -76,6 +78,13 @@ function App() {
                 <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
               </div>
             } />
+            <Route path="/order" element={
+              <div>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <Order />
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+              </div>
+            } />
             <Route path="/profile" element={
               <div>
                 <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
@@ -99,6 +108,21 @@ function App() {
                 <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
                 </Box>
               </Box>
+            } />
+            
+            <Route path="/userdata" element={
+              <div>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <ChangeUserData/>
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+              </div>
+            } />
+            <Route path="/becomed_driver" element={
+              <div>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <BecomeDriver />
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+              </div>
             } />
             
           </Routes>

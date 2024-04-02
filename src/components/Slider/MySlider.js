@@ -14,6 +14,8 @@ import json_data from './slides.json';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
+import PopUpWindow from '../CalculatingDistance/PopUpWindow'
+
 
 let slide_img = require('./refregerator.png');
 let slide_img1 = require('./norefregerator.png');
@@ -39,7 +41,10 @@ function Slide({slide}){
                     {json_data.slides.at(slide).text}
                     </Typography>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: "15%"}}>
+                    <PopUpWindow trig={
                         <Button variant="contained" color="error">РАССЧИТАТЬ ДОСТАВКУ</Button>
+                    }/>
+                        
                     </Box>
                 </CardContent>
             </Box>
