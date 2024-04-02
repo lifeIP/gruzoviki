@@ -485,8 +485,12 @@ export function ChangeUserData() {
     return (
         
             <Center2>
-                <Card>
+                <Card  sx={{borderRadius: "60px"}}>
+                
                 <CardContent sx={{ textAlign: 'center' }}>
+                <Typography variant="h4" sx={{ my: 3 }}>
+                    Изменить данные
+                </Typography>
                     <Box sx={{
                         '& .MuiTextField-root': {
                             m: 1,
