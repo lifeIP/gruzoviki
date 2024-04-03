@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Button, Card, CardContent, TextField, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import useForm from '../hooks/useForm'
-
+import { useState } from "react";
 import { useNavigate } from 'react-router'
 import { Grid } from '@mui/material'
 import { Cookies, useCookies } from 'react-cookie';
@@ -382,7 +382,7 @@ export function BecomeDriver() {
                     <Typography variant="h5" sx={{ my: 3 }}>
                     Заполните анкету
                     </Typography>
-                    <Box sx={{
+                    <Box sx={{ 
                         '& .MuiTextField-root': {
                             m: 1,
                             width: '90%'
@@ -411,6 +411,11 @@ export function BecomeDriver() {
                                 onChange={handleInputChange}
                                 variant="outlined"
                                 {...(errors.gosnumber && { error: true, helperText: errors.gosnumber })} />
+                            
+                            <Box sx={{width: "90%", m: 1, 
+                            alignItems: "center", justifyContent: "center"}}>
+                                <UploadAndDisplayImage/>
+                            </Box>
 
                             <Button
                                 type="submit"
@@ -438,6 +443,39 @@ function Center2(props) {
         </Grid>
     )
 }
+
+const UploadAndDisplayImage = () => {
+
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  return (
+    <div>
+      {selectedImage && (
+        <div>
+          <img
+            alt="not found"
+            width={"250px"}
+            src={URL.createObjectURL(selectedImage)}
+          />
+          <br />
+          <button onClick={() => setSelectedImage(null)}>Remove</button>
+        </div>
+      )}
+
+      <br />
+      <br />
+      
+      <input
+        type="file"
+        name="myImage"
+        onChange={(event) => {
+          console.log(event.target.files[0]);
+          setSelectedImage(event.target.files[0]);
+        }}
+      />
+    </div>
+  );
+};
 
 export function ChangeUserData() {
     const navigate = useNavigate()
@@ -520,6 +558,7 @@ export function ChangeUserData() {
                                 onChange={handleInputChange}
                                 variant="outlined"
                                 />
+                            
                             <Button
                                 type="submit"
                                 variant="contained"

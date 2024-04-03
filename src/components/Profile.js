@@ -43,6 +43,10 @@ function Center2(props) {
     )
 }
 
+
+
+
+
 export default function Profile() {
 
     const navigate = useNavigate()
