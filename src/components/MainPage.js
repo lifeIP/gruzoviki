@@ -46,6 +46,7 @@ export default function Page1({ changeTheme, selectedTheme, lightTheme }) {
             <Box sx={{ marginTop: "2.8vh" }}>
                 <Slider />
             </Box>
+            
             <footer>
                 <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
             </footer>

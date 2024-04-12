@@ -61,23 +61,31 @@ export function Login() {
 
     const login = e => {
         e.preventDefault();
-        if (validate())
-            axios.post("http://localhost:5041/login/", values)
+        if (validate()) {
+            axios.post("http://localhost:8000/login/", values)
                 .then(res => {
-                    setCookie('user', res, { path: '/' });
-                    setCookie('role', res.role, { path: '/' });
-                    navigate('/')
-                })
-                .catch(err => {console.log(err);
+                    console.log(res);
+                    setCookie('access_token', res.data.access_token, { path: '/' });
+                    setCookie('user_id', res.data.user_id, { path: '/' });
                     setCookie('user', 1, { path: '/' });
-                    setCookie('role', 0, { path: '/' });
+                    setCookie('role', res.data.role, { path: '/' });
+                    if(res.data.error){
+                        setCookie('user', 0, { path: '/' });
+                    }
+                    else{
+                        navigate('/')
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
                     navigate('/')
                 })
+        }
     }
 
     return (
         <Center>
-            <Card sx={{borderRadius: "60px", width: 400}}>
+            <Card sx={{ borderRadius: "60px", width: 400 }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                     <Typography variant="h3" sx={{ my: 3 }}>
                         Войти
@@ -110,6 +118,7 @@ export function Login() {
                                 sx={{ width: '90%' }}>ВОЙТИ</Button>
                         </form>
                     </Box>
+                    <Button onClick={() => { navigate("/registration") }}>Регистрация</Button>
                 </CardContent>
             </Card>
         </Center>
@@ -140,27 +149,28 @@ export function Registration() {
     const registration = e => {
         e.preventDefault();
         if (validate())
-            axios.post("http://localhost:5041/registration/", values)
+            axios.post("http://localhost:8000/registration/", values)
                 .then(res => {
-                    navigate('/')
-                })
-                .catch(err => {console.log(err);
-                    navigate('/')
-                });
-            axios.post("http://localhost:5041/login/", values)
-                .then(res => {
-                    setCookie('user', res, { path: '/' });
-                    navigate('/')
-                })
-                .catch(err => {console.log(err);
+                    setCookie('access_token', res.data.access_token, { path: '/' });
+                    setCookie('user_id', res.data.user_id, { path: '/' });
                     setCookie('user', 1, { path: '/' });
-                    navigate('/')
+                    setCookie('role', 'user', { path: '/' });
+                    if(res.data.error){
+                        setCookie('user', 0, { path: '/' });
+                    }
+                    else{
+                        navigate('/')
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                    //navigate('/')
                 });
     }
 
     return (
         <Center>
-            <Card sx={{borderRadius: "60px", width: 400}}>
+            <Card sx={{ borderRadius: "60px", width: 400 }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                     <Typography variant="h3" sx={{ my: 3 }}>
                         Регистрация
@@ -193,7 +203,7 @@ export function Registration() {
                                 onChange={handleInputChange}
                                 variant="outlined"
                                 {...(errors.date_of_birth && { error: true, helperText: errors.date_of_birth })} />
-                                
+
                             <TextField
                                 label="Ваша почта"
                                 name="email"
@@ -215,6 +225,7 @@ export function Registration() {
                                 sx={{ width: '90%' }}>ЗАРЕГИСТРИРОВАТЬСЯ</Button>
                         </form>
                     </Box>
+                    <Button onClick={() => { navigate("/login") }}>Вход</Button>
                 </CardContent>
             </Card>
         </Center>
@@ -224,12 +235,15 @@ export function Registration() {
 
 export function Order() {
     const navigate = useNavigate()
+    const [cookies, setCookie, removeCookie] = useCookies(['user_id', 'access_token', 'role']);
     const getFreshModel = () => ({
         type: '',
         tonaz: '',
         a: '',
         b: '',
         type_of_machina: '',
+        user_id: cookies['user_id'],
+        access_token: cookies['access_token'],
     })
     const {
         values,
@@ -250,24 +264,33 @@ export function Order() {
     const order = e => {
         e.preventDefault();
         if (1)
-            axios.post("http://localhost:5041/order/", values)
+            axios.post("http://localhost:8000/order/", values)
                 .then(res => {
-                    navigate('/')
+                    
+                    if(res.data.error){
+                        //
+                    }
+                    else{
+                        navigate('/')
+                    }
+                    //navigate('/')
                 })
-                .catch(err => {console.log(err);
-                    navigate('/')
+                .catch(err => {
+                    console.log(err);
+                    //navigate('/')
                 });
     }
 
     const [type, setType] = React.useState('');
 
     const handleChange = (event) => {
+        values.type_of_machina = event.target.value;
         setType(event.target.value);
     };
 
     return (
         <Center>
-            <Card sx={{borderRadius: "60px", width: 400}}>
+            <Card sx={{ borderRadius: "60px", width: 400 }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                     <Typography variant="h3" sx={{ my: 3 }}>
                         Заказ
@@ -300,7 +323,7 @@ export function Order() {
                                 onChange={handleInputChange}
                                 variant="outlined"
                                 {...(errors.a && { error: true, helperText: errors.a })} />
-                                
+
                             <TextField
                                 label="Точка прибытия"
                                 name="b"
@@ -309,7 +332,7 @@ export function Order() {
                                 variant="outlined"
                                 {...(errors.b && { error: true, helperText: errors.b })} />
 
-                                <FormControl fullWidth sx={{m: 1, width: '90%'}}>
+                            <FormControl fullWidth sx={{ m: 1, width: '90%' }}>
                                 <InputLabel id="type_of_machina">Выберете тип фургона</InputLabel>
                                 <Select
                                     labelId=""
@@ -323,7 +346,7 @@ export function Order() {
                                     <MenuItem value={30}>Рефрижератор</MenuItem>
                                     <MenuItem value={40}>С увеличенной грузоподъемностью</MenuItem>
                                 </Select>
-                                </FormControl>
+                            </FormControl>
                             <Button
                                 type="submit"
                                 variant="contained"
@@ -363,26 +386,27 @@ export function BecomeDriver() {
     const order = e => {
         e.preventDefault();
         if (1)
-            axios.post("http://localhost:5041/becomed_driver/", values)
+            axios.post("http://localhost:8000/becomed_driver/", values)
                 .then(res => {
                     navigate('/')
                 })
-                .catch(err => {console.log(err);
+                .catch(err => {
+                    console.log(err);
                     navigate('/')
                 });
     }
 
     return (
         <Center>
-            <Card sx={{borderRadius: "60px", width: 400}}>
+            <Card sx={{ borderRadius: "60px", width: 400 }}>
                 <CardContent sx={{ textAlign: 'center' }}>
                     <Typography variant="h4" sx={{ my: 3 }}>
-                    Хотите стать водителем?
+                        Хотите стать водителем?
                     </Typography>
                     <Typography variant="h5" sx={{ my: 3 }}>
-                    Заполните анкету
+                        Заполните анкету
                     </Typography>
-                    <Box sx={{ 
+                    <Box sx={{
                         '& .MuiTextField-root': {
                             m: 1,
                             width: '90%'
@@ -403,7 +427,7 @@ export function BecomeDriver() {
                                 onChange={handleInputChange}
                                 variant="outlined"
                                 {...(errors.marka && { error: true, helperText: errors.marka })} />
-                                
+
                             <TextField
                                 label="Гос. номер тс"
                                 name="gosnumber"
@@ -411,10 +435,12 @@ export function BecomeDriver() {
                                 onChange={handleInputChange}
                                 variant="outlined"
                                 {...(errors.gosnumber && { error: true, helperText: errors.gosnumber })} />
-                            
-                            <Box sx={{width: "90%", m: 1, 
-                            alignItems: "center", justifyContent: "center"}}>
-                                <UploadAndDisplayImage/>
+
+                            <Box sx={{
+                                width: "90%", m: 1,
+                                alignItems: "center", justifyContent: "center"
+                            }}>
+                                <UploadAndDisplayImage />
                             </Box>
 
                             <Button
@@ -446,35 +472,35 @@ function Center2(props) {
 
 const UploadAndDisplayImage = () => {
 
-  const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedImage, setSelectedImage] = useState(null);
 
-  return (
-    <div>
-      {selectedImage && (
+    return (
         <div>
-          <img
-            alt="not found"
-            width={"250px"}
-            src={URL.createObjectURL(selectedImage)}
-          />
-          <br />
-          <button onClick={() => setSelectedImage(null)}>Remove</button>
-        </div>
-      )}
+            {selectedImage && (
+                <div>
+                    <img
+                        alt="not found"
+                        width={"250px"}
+                        src={URL.createObjectURL(selectedImage)}
+                    />
+                    <br />
+                    <button onClick={() => setSelectedImage(null)}>Remove</button>
+                </div>
+            )}
 
-      <br />
-      <br />
-      
-      <input
-        type="file"
-        name="myImage"
-        onChange={(event) => {
-          console.log(event.target.files[0]);
-          setSelectedImage(event.target.files[0]);
-        }}
-      />
-    </div>
-  );
+            <br />
+            <br />
+
+            <input
+                type="file"
+                name="myImage"
+                onChange={(event) => {
+                    console.log(event.target.files[0]);
+                    setSelectedImage(event.target.files[0]);
+                }}
+            />
+        </div>
+    );
 };
 
 export function ChangeUserData() {
@@ -505,11 +531,12 @@ export function ChangeUserData() {
     const order = e => {
         e.preventDefault();
         if (1)
-            axios.post("http://localhost:5041/user_data/", values)
+            axios.post("http://localhost:8000/user_data/", values)
                 .then(res => {
                     navigate('/profile')
                 })
-                .catch(err => {console.log(err);
+                .catch(err => {
+                    console.log(err);
                     navigate('/profile')
                 });
     }
@@ -521,14 +548,14 @@ export function ChangeUserData() {
     };
 
     return (
-        
-            <Center2>
-                <Card  sx={{borderRadius: "60px"}}>
-                
+
+        <Center2>
+            <Card sx={{ borderRadius: "60px" }}>
+
                 <CardContent sx={{ textAlign: 'center' }}>
-                <Typography variant="h4" sx={{ my: 3 }}>
-                    Изменить данные
-                </Typography>
+                    <Typography variant="h4" sx={{ my: 3 }}>
+                        Изменить данные
+                    </Typography>
                     <Box sx={{
                         '& .MuiTextField-root': {
                             m: 1,
@@ -543,22 +570,22 @@ export function ChangeUserData() {
                                 onChange={handleInputChange}
                                 variant="outlined"
                             />
-                            
+
                             <TextField
                                 label="Город"
                                 name="city"
                                 value={values.city}
                                 onChange={handleInputChange}
                                 variant="outlined"
-                                />
+                            />
                             <TextField
                                 label="Дата"
                                 name="date"
                                 value={values.date}
                                 onChange={handleInputChange}
                                 variant="outlined"
-                                />
-                            
+                            />
+
                             <Button
                                 type="submit"
                                 variant="contained"
@@ -567,7 +594,7 @@ export function ChangeUserData() {
                         </form>
                     </Box>
                 </CardContent>
-                </Card>
-            </Center2>
+            </Card>
+        </Center2>
     );
 }
