@@ -8,13 +8,10 @@ import { Grid } from '@mui/material'
 import { Cookies, useCookies } from 'react-cookie';
 import axios from 'axios'
 
-
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
-
 
 
 const getFreshModel = () => ({
@@ -69,10 +66,10 @@ export function Login() {
                     setCookie('user_id', res.data.user_id, { path: '/' });
                     setCookie('user', 1, { path: '/' });
                     setCookie('role', res.data.role, { path: '/' });
-                    if(res.data.error){
+                    if (res.data.error) {
                         setCookie('user', 0, { path: '/' });
                     }
-                    else{
+                    else {
                         navigate('/')
                     }
                 })
@@ -155,10 +152,10 @@ export function Registration() {
                     setCookie('user_id', res.data.user_id, { path: '/' });
                     setCookie('user', 1, { path: '/' });
                     setCookie('role', 'user', { path: '/' });
-                    if(res.data.error){
+                    if (res.data.error) {
                         setCookie('user', 0, { path: '/' });
                     }
-                    else{
+                    else {
                         navigate('/')
                     }
                 })
@@ -266,11 +263,11 @@ export function Order() {
         if (1)
             axios.post("http://localhost:8000/order/", values)
                 .then(res => {
-                    
-                    if(res.data.error){
+
+                    if (res.data.error) {
                         //
                     }
-                    else{
+                    else {
                         navigate('/')
                     }
                     //navigate('/')
@@ -360,12 +357,78 @@ export function Order() {
     );
 }
 
+
+
+
 export function BecomeDriver() {
     const navigate = useNavigate()
+    const [cookies, setCookie, removeCookie] = useCookies(['user_id', 'access_token', 'role']);
+
+    class ImageEncoder extends React.Component {
+        state = {
+            imageBinary: '',
+            user_id: cookies['user_id'],
+            access_token: cookies['access_token'],
+        };
+
+        fileSelectedHandler = event => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                const binaryStr = reader.result;
+                this.setState({
+                    imageBinary: binaryStr,
+                    user_id: cookies['user_id'],
+                    access_token: cookies['access_token'],
+                });
+
+                const data = {
+                    user_id: this.state.user_id,
+                    access_token: this.state.access_token,
+                    image: this.state.imageBinary,
+                };
+                const jsonData = JSON.stringify(data);
+                console.log(jsonData);
+
+                axios.post("http://localhost:8000/becomed_driver/img/", jsonData)
+                    .then(res => {
+                        if (res.data.error) {
+                            //
+                        }
+                        else {
+                            navigate('/')
+                        }
+                        //navigate('/')
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        // navigate('/')
+                    });
+            }
+
+            reader.readAsBinaryString(file);
+        }
+
+        load_img = event => {
+            this.fileSelectedHandler(event);
+        }
+
+        render() {
+            return (
+                <div>
+                    <input type="file" onChange={this.load_img} />
+                </div>
+            );
+        }
+    }
+
     const getFreshModel = () => ({
+        user_id: cookies['user_id'],
+        access_token: cookies['access_token'],
         tonaz: '',
         marka: '',
-        gosnumber: ''
+        gosnumber: '',
     })
     const {
         values,
@@ -374,7 +437,7 @@ export function BecomeDriver() {
         setErrors,
         handleInputChange
     } = useForm(getFreshModel);
-
+    const [selectedImage, setSelectedImage] = useState(null);
     // const validate = () => {
     //     let temp = {}
     //     temp.email = (/\S+@\S+\.\S+/).test(values.email) ? "" : "Некоректный адрес"
@@ -382,18 +445,24 @@ export function BecomeDriver() {
     //     setErrors(temp)
     //     return Object.values(temp).every(x => x == "")
     // }
-
     const order = e => {
         e.preventDefault();
-        if (1)
+        if (1) {
             axios.post("http://localhost:8000/becomed_driver/", values)
                 .then(res => {
-                    navigate('/')
+                    if (res.data.error) {
+
+                    }
+                    else {
+                        navigate('/')
+                    }
+                    //navigate('/')
                 })
                 .catch(err => {
                     console.log(err);
-                    navigate('/')
+                    // navigate('/')
                 });
+        }
     }
 
     return (
@@ -440,7 +509,7 @@ export function BecomeDriver() {
                                 width: "90%", m: 1,
                                 alignItems: "center", justifyContent: "center"
                             }}>
-                                <UploadAndDisplayImage />
+                                <ImageEncoder></ImageEncoder>
                             </Box>
 
                             <Button
@@ -470,46 +539,18 @@ function Center2(props) {
     )
 }
 
-const UploadAndDisplayImage = () => {
 
-    const [selectedImage, setSelectedImage] = useState(null);
-
-    return (
-        <div>
-            {selectedImage && (
-                <div>
-                    <img
-                        alt="not found"
-                        width={"250px"}
-                        src={URL.createObjectURL(selectedImage)}
-                    />
-                    <br />
-                    <button onClick={() => setSelectedImage(null)}>Remove</button>
-                </div>
-            )}
-
-            <br />
-            <br />
-
-            <input
-                type="file"
-                name="myImage"
-                onChange={(event) => {
-                    console.log(event.target.files[0]);
-                    setSelectedImage(event.target.files[0]);
-                }}
-            />
-        </div>
-    );
-};
 
 export function ChangeUserData() {
     const navigate = useNavigate()
+    const [cookies, setCookie, removeCookie] = useCookies(['user_id', 'access_token', 'role']);
     const getFreshModel = () => ({
         fio: '',
         date: '',
         city: '',
         eas: "",
+        user_id: cookies['user_id'],
+        access_token: cookies['access_token'],
     })
 
     const {

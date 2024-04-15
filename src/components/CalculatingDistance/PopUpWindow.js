@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import Box from '@mui/material/Box';
 import Popup from 'reactjs-popup';
@@ -24,14 +24,16 @@ function Center(props) {
     )
 }
 
-const getFreshModel = () => ({
-    tonnazh: '',
-    a: '',
-    b: '',
-    cost: ''
-})
+
 
 export default function PopUpWindow({trig}) {
+    const getFreshModel = () => ({
+        tonnazh: '',
+        a: '',
+        b: '',
+        cost: '0'
+    })
+
     const navigate = useNavigate()
     const {
         values,
@@ -41,13 +43,19 @@ export default function PopUpWindow({trig}) {
         handleInputChange
     } = useForm(getFreshModel);
 
+    const [cost, setCost] = useState(0);
     const calculating = e => {
         e.preventDefault();
         if (true)
-            axios.post("http://localhost:5041/calculating/", values)
+            console.log("calculating");
+            axios.post("http://localhost:8000/calculating/", values)
                 .then(res => {
-                    console.log("Calculating");
-                    // close();
+                    if (res.data.error) {
+                        navigate('/')
+                    }
+                    else {
+                        setCost(Math.round(res.data.result * values.tonnazh * 7));
+                    }
                 })
                 .catch(err => {console.log(err);
                     console.log("Calculating");
@@ -74,7 +82,7 @@ export default function PopUpWindow({trig}) {
                                     />
                                     <Box sx={{ marginLeft: "1.5vw", marginRight: "4.5vw" }}>
                                         <Typography variant="h4">
-                                        Подсчет расстояния
+                                        Подсчет суммы
                                         </Typography>
                                         <Box sx={{
                                             '& .MuiTextField-root': {
@@ -104,13 +112,33 @@ export default function PopUpWindow({trig}) {
                                                     onChange={handleInputChange}
                                                     variant="outlined"
                                                     {...(errors.b && { error: true, helperText: errors.b })} />
-                                                <TextField
+                                                <Box
+                                                    alignItems="center" 
+                                                    justifyContent="center" 
+                                                    display="flex" 
+                                                    mr="15px">
+                                                    <Button type="submit"
+                                                    variant="contained" >
+                                                        Расчитать  
+                                                    </Button>
+                                                </Box>
+                                                {/* <TextField
                                                     label="Сумма"
                                                     name="cost"
                                                     value={values.cost}
                                                     onChange={handleInputChange}
                                                     variant="outlined"
-                                                    {...(errors.cost && { error: true, helperText: errors.cost })} />
+                                                    {...(errors.cost && { error: true, helperText: errors.cost })} /> */}
+                                                <Box
+                                                    mt="10px"
+                                                    alignItems="center" 
+                                                    justifyContent="center" 
+                                                    display="flex" 
+                                                    mr="15px">
+                                                    <Typography variant="h6" >
+                                                        Сумма: {cost}
+                                                    </Typography>
+                                                </Box>
                                             </form>
                                             <Button onClick=
                                                 {() => close()}>
