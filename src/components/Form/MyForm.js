@@ -372,42 +372,49 @@ export function BecomeDriver() {
         };
 
         fileSelectedHandler = event => {
-            const file = event.target.files[0];
+            const file = event.target.files[0]; //let image_file = canvas.toDataURL()
             const reader = new FileReader();
 
             reader.onload = () => {
                 const binaryStr = reader.result;
                 this.setState({
                     imageBinary: binaryStr,
-                    user_id: cookies['user_id'],
-                    access_token: cookies['access_token'],
                 });
 
-                const data = {
-                    user_id: this.state.user_id,
-                    access_token: this.state.access_token,
+                const body = {
                     image: this.state.imageBinary,
                 };
-                const jsonData = JSON.stringify(data);
-                console.log(jsonData);
-
-                axios.post("http://localhost:8000/becomed_driver/img/", jsonData)
-                    .then(res => {
-                        if (res.data.error) {
-                            //
-                        }
-                        else {
-                            navigate('/')
-                        }
-                        //navigate('/')
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        // navigate('/')
-                    });
+                
+                fetch("http://localhost:8000/becomed_driver/img/", {
+                    body: JSON.stringify(body),
+                    method: 'POST',
+                    headers: {
+                      'Accept': 'application/json',
+                      'Content-Type': 'application/json',
+                    }
+                  }).then(response => {
+                    console.log(response);
+                  }).catch(exception => {
+                    // fetch API problem: in case of CORS the server must send header "Access-Control-Allow-Origin":"*"
+                    console.log(exception);
+                  });
+            //     axios.post("http://localhost:8000/becomed_driver/img/", jsonData)
+            //         .then(res => {
+            //             if (res.data.error) {
+            //                 //
+            //             }
+            //             else {
+            //                 navigate('/')
+            //             }
+            //             //navigate('/')
+            //         })
+            //         .catch(err => {
+            //             console.log(err);
+            //             // navigate('/')
+            //         });
             }
 
-            reader.readAsBinaryString(file);
+            // reader.readAsBinaryString(file);
         }
 
         load_img = event => {
