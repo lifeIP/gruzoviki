@@ -93,7 +93,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         res = cur.execute(f"SELECT * FROM user WHERE email='{data['email']}' AND password='{data['password']}'")
         res = res.fetchone()
         print(res)
-        if res[0] is None:
+        if res is None:
             cookie['error'] = True
         else:
             cookie['role'] = res[7]
@@ -277,44 +277,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         time_elapsed_ms = int((end_time - start_time) * 1000)
         print(f"Update in {time_elapsed_ms} ms")
 
-        # dataLength = int(self.headers["Content-Length"])
-        # # data = self.rfile.read(dataLength)
-        # # data = json.loads(data.decode())
         cookie = {}
-
-        # payload = request.json
-        # image = payload['content']
-        # # before ',' symbol there will be like 'data:image/png;base64', so you can understand image file
-        # image = image[image.find(",") + 1:]  # get the image data from input
-        # file_content = base64.b64decode(image)
-
-        # s3 = boto3.resource('s3')
-        # result = s3.meta.client.put_object(Body=file_content,
-        #                                 Bucket=BUCKET_NAME,
-        #                                 Key="someimagename.png",
-        #                                 Metadata={})
-        
-        # # u_image
-        # # image_id, user_id, access_token, image
-        # res = cur.execute(f"SELECT * FROM user WHERE user_id={data['user_id']} AND access_token={data['access_token']}")
-        # res = res.fetchone()
-        # print(res)
-        # if res[0] is None:
-        #     res = cur.execute("""SELECT max(image_id) FROM u_image""")
-        #     res = res.fetchone()
-        #     print(data)
-        #     if res[0] is None: u_index = 0
-        #     else: u_index = res[0] + 1
-            
-        #     res = cur.execute(f"""
-        #         INSERT INTO u_image VALUES
-        #             ({u_index}, {data['user_id']}, {data['access_token']}, '{data['image']}')
-        #         """)
-        #     print(res)
-        #     con.commit()
-        #     cookie['error'] = False
-
-        # else:
         cookie['error'] = True
 
         self.send_dict_response(cookie)

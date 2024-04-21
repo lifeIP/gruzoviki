@@ -12,18 +12,20 @@ import Slider from './components/Slider/MySlider'
 import Typography from '@mui/material/Typography';
 
 import MainPage from "./components/MainPage";
-import Profile from "./components/Profile";
+import Profile from "./components/Profile/Profile";
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { BecomeDriver, ChangeUserData, Login, Registration } from "./components/Form/MyForm";
 import ExitPage from "./components/ExitPage";
 import AboutUs from "./components/AboutUs";
-
-import { Order } from "./components/Form/MyForm";
 
 import mySvg from './back_about.png';
 
 
+import BecomeDriver from "./components/Form/BecomeDriver";
+import Login from "./components/Form/Login";
+import Order from "./components/Form/Order";
+import Registration from "./components/Form/Registration";
+import ChangeUserData from "./components/Form/ChangeUserData";
 
 const darkTheme = createTheme({
   palette: {
