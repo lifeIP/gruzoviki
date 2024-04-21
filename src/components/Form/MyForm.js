@@ -233,6 +233,13 @@ export function Registration() {
 export function Order() {
     const navigate = useNavigate()
     const [cookies, setCookie, removeCookie] = useCookies(['user_id', 'access_token', 'role']);
+
+    useEffect(()=>{
+        if(cookies['user'] == 0){
+            navigate("/login/");
+        }
+    },[])
+    
     const getFreshModel = () => ({
         type: '',
         tonaz: '',
@@ -362,7 +369,13 @@ export function Order() {
 
 export function BecomeDriver() {
     const navigate = useNavigate()
-    const [cookies, setCookie, removeCookie] = useCookies(['user_id', 'access_token', 'role']);
+    const [cookies, setCookie, removeCookie] = useCookies(['user', 'user_id', 'access_token', 'role']);
+
+    useEffect(()=>{
+        if(cookies['user'] == 0){
+            navigate("/login/");
+        }
+    },[])
 
     class ImageEncoder extends React.Component {
         state = {

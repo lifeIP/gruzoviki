@@ -8,24 +8,33 @@ cur = con.cursor()
 # driver
 def init_DB():
     cur.execute('''CREATE TABLE IF NOT EXISTS user(user_id, access_token, name, email, telephone, date_of_birth, password, role, city)''')
-    cur.execute('''CREATE TABLE IF NOT EXISTS u_order(order_id, user_id, access_token, type, tonaz, a, b, type_of_machina)''')
+    cur.execute('''CREATE TABLE IF NOT EXISTS u_order(order_id, user_id, access_token, type, tonaz, a, b, type_of_machina, order_status)''')
     cur.execute('''CREATE TABLE IF NOT EXISTS u_image(image_id, user_id, access_token, image)''')
     cur.execute('''CREATE TABLE IF NOT EXISTS u_driver(driver_id, user_id, access_token, tonaz, marka, gosnumber)''')
     con.commit()
+
+def add_admin():
+    cur.execute(f"""
+        INSERT INTO user VALUES
+            (0, 32387, 'Admin', 'admin@gruzoviki.ru', '+78005553535', '01.01.2000', 'pass', 'admin', 'Москва')
+        """)
+    con.commit()
+    
+def add_manager():
+    cur.execute(f"""
+        INSERT INTO user VALUES
+            (1, 22887, 'Manager', 'manager@gruzoviki.ru', '+78005553535', '01.01.2000', 'pass', 'manager', 'Москва')
+        """)
+    con.commit()
+
 init_DB()
+# add_admin()
+# add_manager()
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from json import dumps
 import json
-from http import cookies
-
 import random
-
-import re
-import base64
-import requests
-import boto3
-
 import haversine as hs
 from haversine import Unit
 
@@ -61,6 +70,8 @@ class RequestHandler(BaseHTTPRequestHandler):
       self.send_dict_response(response)
 
 
+
+
   def do_POST(self):
     print(self.path)
     if self.path == '/login/':
@@ -91,6 +102,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             cookie['access_token'] = res[1]
 
         self.send_dict_response(cookie)
+        
         
     elif self.path == '/user/':
         self.send_response(200)
@@ -194,7 +206,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             
             cur.execute(f"""
                  INSERT INTO u_order VALUES
-                     ({u_index}, {data["user_id"]}, {data["access_token"]}, '{data["type"]}', {data['tonaz']}, '{data['a']}', '{data['b']}', {data['type_of_machina']})
+                     ({u_index}, {data["user_id"]}, {data["access_token"]}, '{data["type"]}', {data['tonaz']}, '{data['a']}', '{data['b']}', {data['type_of_machina']}, 'wait')
                  """)
             
             con.commit()
@@ -222,13 +234,19 @@ class RequestHandler(BaseHTTPRequestHandler):
         res = cur.execute(f"SELECT * FROM u_order WHERE user_id={data['user_id']} AND access_token={data['access_token']}")
         res = res.fetchmany(5)
         print(res)
-        if res is None:
+        if len(res) <= 0:
             cookie['error'] = True
         
         else:
             cookie['error'] = False
-            cookie['content'] = res
-            self.send_dict_response(cookie)
+            i = 0
+            for r in res:
+                cookie[f'{i}'] = r
+                i+=1
+                cookie['len'] = i
+            
+        
+        self.send_dict_response(cookie)
 
 
 
@@ -241,10 +259,28 @@ class RequestHandler(BaseHTTPRequestHandler):
         # self.send_header("Content-Type", "application/json")
         self.end_headers()
 
+        import time
+        start_time = time.time()
+        content_length = int(self. headers['Content-Length'])
+        # Read the binary file data sent by the client
+        file_data = self.rfile.read(content_length)
+
+        # Here you can process the received file data, such as saving to disk
+        with open('uploaded_file.bin', 'wb') as file:
+            file. write(file_data)
+
+        self. send_response(200)
+        self. end_headers()
+        self.wfile.write(b'File uploaded successfully.')
+
+        end_time = time. time()
+        time_elapsed_ms = int((end_time - start_time) * 1000)
+        print(f"Update in {time_elapsed_ms} ms")
+
         # dataLength = int(self.headers["Content-Length"])
         # # data = self.rfile.read(dataLength)
         # # data = json.loads(data.decode())
-        # # cookie = {}
+        cookie = {}
 
         # payload = request.json
         # image = payload['content']
@@ -279,9 +315,9 @@ class RequestHandler(BaseHTTPRequestHandler):
         #     cookie['error'] = False
 
         # else:
-        #     cookie['error'] = True
+        cookie['error'] = True
 
-        # self.send_dict_response(cookie)
+        self.send_dict_response(cookie)
 
 
 
