@@ -27,9 +27,25 @@ def add_manager():
         """)
     con.commit()
 
+def add_driver():
+    cur.execute(f"""
+        INSERT INTO user VALUES
+            (2, 12347, 'Driver', 'driver@gruzoviki.ru', '+78005553535', '01.01.2000', 'pass', 'driver', 'Томск')
+        """)
+    con.commit()
+
+def add_user():
+    cur.execute(f"""
+        INSERT INTO user VALUES
+            (3, 21345, 'User', 'user@gruzoviki.ru', '+78005553535', '01.01.2000', 'pass', 'user', 'Томск')
+        """)
+    con.commit()
+
 init_DB()
 # add_admin()
 # add_manager()
+# add_driver()
+# add_user()
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from json import dumps
@@ -130,6 +146,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             cookie['error'] = False
             cookie['city'] = res[8]
             cookie['date_of_bith'] = res[5]
+            cookie['raiting'] = 4
 
         self.send_dict_response(cookie)
 
@@ -206,7 +223,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             
             cur.execute(f"""
                  INSERT INTO u_order VALUES
-                     ({u_index}, {data["user_id"]}, {data["access_token"]}, '{data["type"]}', {data['tonaz']}, '{data['a']}', '{data['b']}', {data['type_of_machina']}, 'wait')
+                     ({u_index}, {data["user_id"]}, {data["access_token"]}, '{data["type"]}', {data['tonaz']}, '{data['a']}', '{data['b']}', {data['type_of_machina']}, 'done')
                  """)
             
             con.commit()
@@ -216,7 +233,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.send_dict_response(cookie)
 
 
-    elif self.path == '/order/get/':
+    elif self.path == '/order/get/all':
         self.send_response(200)
         self._send_cors_headers()
         
@@ -248,6 +265,101 @@ class RequestHandler(BaseHTTPRequestHandler):
         
         self.send_dict_response(cookie)
 
+    elif self.path == '/order/get/in_progress':
+        self.send_response(200)
+        self._send_cors_headers()
+        
+        self.send_header("Content-type", "text/html")
+        # self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        dataLength = int(self.headers["Content-Length"])
+        data = self.rfile.read(dataLength)
+        data = json.loads(data.decode())
+        cookie = {}
+        print(data)
+# order_id, user_id, access_token, type, tonaz, a, b, type_of_machina
+        # user_id, access_token, type, tonaz, a, b, type_of_machina
+        res = cur.execute(f"SELECT * FROM u_order WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND order_status='in_progress'")
+        res = res.fetchmany(5)
+        print(res)
+        if len(res) <= 0:
+            cookie['error'] = True
+        
+        else:
+            cookie['error'] = False
+            i = 0
+            for r in res:
+                cookie[f'{i}'] = r
+                i+=1
+                cookie['len'] = i
+            
+        
+        self.send_dict_response(cookie)
+
+    elif self.path == '/order/get/done':
+        self.send_response(200)
+        self._send_cors_headers()
+        
+        self.send_header("Content-type", "text/html")
+        # self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        dataLength = int(self.headers["Content-Length"])
+        data = self.rfile.read(dataLength)
+        data = json.loads(data.decode())
+        cookie = {}
+        print(data)
+# order_id, user_id, access_token, type, tonaz, a, b, type_of_machina
+        # user_id, access_token, type, tonaz, a, b, type_of_machina
+        res = cur.execute(f"SELECT * FROM u_order WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND order_status='done'")
+        res = res.fetchmany(5)
+        print(res)
+        if len(res) <= 0:
+            cookie['error'] = True
+        
+        else:
+            cookie['error'] = False
+            i = 0
+            for r in res:
+                cookie[f'{i}'] = r
+                i+=1
+                cookie['len'] = i
+            
+        
+        self.send_dict_response(cookie)
+
+    elif self.path == '/order/get/wait':
+        self.send_response(200)
+        self._send_cors_headers()
+        
+        self.send_header("Content-type", "text/html")
+        # self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        dataLength = int(self.headers["Content-Length"])
+        data = self.rfile.read(dataLength)
+        data = json.loads(data.decode())
+        cookie = {}
+        print(data)
+# order_id, user_id, access_token, type, tonaz, a, b, type_of_machina
+        # user_id, access_token, type, tonaz, a, b, type_of_machina
+        res = cur.execute(f"SELECT * FROM u_order WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND order_status='wait'")
+        res = res.fetchmany(5)
+        print(res)
+        if len(res) <= 0:
+            cookie['error'] = True
+        
+        else:
+            cookie['error'] = False
+            i = 0
+            for r in res:
+                cookie[f'{i}'] = r
+                i+=1
+                cookie['len'] = i
+            
+        
+        self.send_dict_response(cookie)
 
 
 
@@ -281,8 +393,6 @@ class RequestHandler(BaseHTTPRequestHandler):
         cookie['error'] = True
 
         self.send_dict_response(cookie)
-
-
 
 
 
@@ -377,10 +487,17 @@ class RequestHandler(BaseHTTPRequestHandler):
         print(data)
         cookie = {}
 
-        res1 = list(map(float, data['a'].split(', ')))
-        res2 = list(map(float, data['b'].split(', ')))
 
-        result=hs.haversine((res1[0], res1[1]), (res2[0], res2[1]), unit=Unit.KILOMETERS)
+        from geopy.geocoders import Nominatim #Подключаем библиотеку
+        from geopy.distance import geodesic #И дополнения
+        geolocator = Nominatim(user_agent="Tester")
+        location_1 = geolocator.geocode(data['a']) #Получаем полное название первого города
+        location_2 = geolocator.geocode(data['b']) #Получаем полное название второго города
+
+        gps_point_1 = location_1.latitude, location_1.longitude #Выводим координаты первого города
+        gps_point_2 = location_2.latitude, location_2.longitude #Выводим координаты второго города
+
+        result=geodesic(gps_point_1, gps_point_2).kilometers
 
         cookie['result'] = result
         cookie['error'] = False
