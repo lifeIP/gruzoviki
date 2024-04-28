@@ -19,9 +19,9 @@ function Center(props) {
 export default function AboutUs() {
     return (
             <Center sx={{ height: "80vh" }}>
-                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: "14vh" }}>НЕМНОГО О НАС</Typography>
+                <Typography variant="h3" sx={{ textAlign: 'center', marginTop: "14vh" }} style={{color: "white"}}>НЕМНОГО О НАС</Typography>
                 
-                <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', marginTop: "4vh", width: "65vw" }}>
+                <Typography variant="body1" color="text.secondary" sx={{ textAlign: 'center', marginTop: "4vh", width: "65vw" }}  style={{color: "white"}}>
                     Залог нашей успешной деятельности – это наша команда. Сотрудники компании – это специалисты высочайшего уровня, 
                     обладающие большим опытом работы в транспортной отрасли и в сфере логистики. Мы следим за тем, чтобы их квалификация 
                     оставалась на должном уровне и соответствовала потребительским запросам. Это позволяет нам шагать в ногу со временем 

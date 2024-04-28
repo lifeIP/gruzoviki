@@ -47,48 +47,19 @@ export default function BecomeDriver() {
 
         fileSelectedHandler = event => {
             const file = event.target.files[0]; //let image_file = canvas.toDataURL()
-            const reader = new FileReader();
+            
+            const formData = new FormData();
+            formData.append('file', file);
 
-            reader.onload = () => {
-                const binaryStr = reader.result;
-                this.setState({
-                    imageBinary: binaryStr,
-                });
-
-                const body = {
-                    image: this.state.imageBinary,
-                };
-                
-                fetch("http://localhost:8000/becomed_driver/img/", {
-                    body: JSON.stringify(body),
-                    method: 'POST',
-                    headers: {
-                      'Accept': 'application/json',
-                      'Content-Type': 'application/json',
-                    }
-                  }).then(response => {
-                    console.log(response);
-                  }).catch(exception => {
-                    // fetch API problem: in case of CORS the server must send header "Access-Control-Allow-Origin":"*"
-                    console.log(exception);
-                  });
-            //     axios.post("http://localhost:8000/becomed_driver/img/", jsonData)
-            //         .then(res => {
-            //             if (res.data.error) {
-            //                 //
-            //             }
-            //             else {
-            //                 navigate('/')
-            //             }
-            //             //navigate('/')
-            //         })
-            //         .catch(err => {
-            //             console.log(err);
-            //             // navigate('/')
-            //         });
-            }
-
-            // reader.readAsBinaryString(file);
+            const res = fetch("http://localhost:8000/becomed_driver/img/",{
+                method: 'POST',
+                body: formData,
+            });
+            res.then(data =>{
+                console.log("POST");
+                console.log(data);
+            })
+           
         }
 
         load_img = event => {

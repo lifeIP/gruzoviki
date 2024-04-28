@@ -138,6 +138,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         # name, email, telephone, date_of_birth, password
         res = cur.execute(f"SELECT * FROM user WHERE user_id={data['user_id']} AND access_token={data['access_token']}")
         res = res.fetchone()
+
         print(res)
         if res[0] is None:
             cookie['error'] = True
@@ -249,7 +250,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 # order_id, user_id, access_token, type, tonaz, a, b, type_of_machina
         # user_id, access_token, type, tonaz, a, b, type_of_machina
         res = cur.execute(f"SELECT * FROM u_order WHERE user_id={data['user_id']} AND access_token={data['access_token']}")
-        res = res.fetchmany(5)
+        res = res.fetchmany(25)
         print(res)
         if len(res) <= 0:
             cookie['error'] = True
@@ -281,7 +282,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 # order_id, user_id, access_token, type, tonaz, a, b, type_of_machina
         # user_id, access_token, type, tonaz, a, b, type_of_machina
         res = cur.execute(f"SELECT * FROM u_order WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND order_status='in_progress'")
-        res = res.fetchmany(5)
+        res = res.fetchmany(25)
         print(res)
         if len(res) <= 0:
             cookie['error'] = True
@@ -313,7 +314,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 # order_id, user_id, access_token, type, tonaz, a, b, type_of_machina
         # user_id, access_token, type, tonaz, a, b, type_of_machina
         res = cur.execute(f"SELECT * FROM u_order WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND order_status='done'")
-        res = res.fetchmany(5)
+        res = res.fetchmany(25)
         print(res)
         if len(res) <= 0:
             cookie['error'] = True
@@ -340,12 +341,12 @@ class RequestHandler(BaseHTTPRequestHandler):
         dataLength = int(self.headers["Content-Length"])
         data = self.rfile.read(dataLength)
         data = json.loads(data.decode())
+        
         cookie = {}
         print(data)
-# order_id, user_id, access_token, type, tonaz, a, b, type_of_machina
-        # user_id, access_token, type, tonaz, a, b, type_of_machina
+        
         res = cur.execute(f"SELECT * FROM u_order WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND order_status='wait'")
-        res = res.fetchmany(5)
+        res = res.fetchmany(25)
         print(res)
         if len(res) <= 0:
             cookie['error'] = True
@@ -362,8 +363,8 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.send_dict_response(cookie)
 
 
-
-    elif self.path == '/becomed_driver/img/':
+    #-----------------------------------------------------------------------------------
+    elif self.path == '/order/manager/get/all/':
         self.send_response(200)
         self._send_cors_headers()
         
@@ -371,27 +372,185 @@ class RequestHandler(BaseHTTPRequestHandler):
         # self.send_header("Content-Type", "application/json")
         self.end_headers()
 
-        import time
-        start_time = time.time()
-        content_length = int(self. headers['Content-Length'])
-        # Read the binary file data sent by the client
-        file_data = self.rfile.read(content_length)
+        dataLength = int(self.headers["Content-Length"])
+        data = self.rfile.read(dataLength)
+        data = json.loads(data.decode())
+        cookie = {}
+        print(data)
 
-        # Here you can process the received file data, such as saving to disk
-        with open('uploaded_file.bin', 'wb') as file:
-            file. write(file_data)
+        # user_id, access_token, type, tonaz, a, b, type_of_machina
+        manager = cur.execute(f"SELECT * FROM user WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND (role='manager' OR role='admin')")
+        manager = manager.fetchone();
 
-        self. send_response(200)
-        self. end_headers()
-        self.wfile.write(b'File uploaded successfully.')
+        if manager is None: 
+            cookie['error'] = True
+            self.send_dict_response(cookie)
+            return;
 
-        end_time = time. time()
-        time_elapsed_ms = int((end_time - start_time) * 1000)
-        print(f"Update in {time_elapsed_ms} ms")
+
+        res = cur.execute(f"SELECT * FROM u_order")
+        res = res.fetchmany(25)
+        print(res)
+        if len(res) <= 0:
+            cookie['error'] = True
+        
+        else:
+            cookie['error'] = False
+            i = 0
+            for r in res:
+                cookie[f'{i}'] = r
+                i+=1
+                cookie['len'] = i
+            
+        
+        self.send_dict_response(cookie)
+
+    elif self.path == '/order/manager/get/in_progress':
+        self.send_response(200)
+        self._send_cors_headers()
+        
+        self.send_header("Content-type", "text/html")
+        # self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        dataLength = int(self.headers["Content-Length"])
+        data = self.rfile.read(dataLength)
+        data = json.loads(data.decode())
+        cookie = {}
+        print(data)
+
+        manager = cur.execute(f"SELECT * FROM user WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND (role='manager' OR role='admin')")
+        manager = manager.fetchone();
+
+        if manager is None: 
+            cookie['error'] = True
+            self.send_dict_response(cookie)
+            return;
+
+        res = cur.execute(f"SELECT * FROM u_order WHERE order_status='in_progress'")
+        res = res.fetchmany(25)
+        print(res)
+        if len(res) <= 0:
+            cookie['error'] = True
+        
+        else:
+            cookie['error'] = False
+            i = 0
+            for r in res:
+                cookie[f'{i}'] = r
+                i+=1
+                cookie['len'] = i
+            
+        
+        self.send_dict_response(cookie)
+
+    elif self.path == '/order/manager/get/done':
+        self.send_response(200)
+        self._send_cors_headers()
+        
+        self.send_header("Content-type", "text/html")
+        # self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        dataLength = int(self.headers["Content-Length"])
+        data = self.rfile.read(dataLength)
+        data = json.loads(data.decode())
+        cookie = {}
+        print(data)
+
+        manager = cur.execute(f"SELECT * FROM user WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND (role='manager' OR role='admin')")
+        manager = manager.fetchone();
+
+        if manager is None: 
+            cookie['error'] = True
+            self.send_dict_response(cookie)
+            return;
+
+        res = cur.execute(f"SELECT * FROM u_order WHERE order_status='done'")
+        res = res.fetchmany(25)
+        print(res)
+        if len(res) <= 0:
+            cookie['error'] = True
+        
+        else:
+            cookie['error'] = False
+            i = 0
+            for r in res:
+                cookie[f'{i}'] = r
+                i+=1
+                cookie['len'] = i
+            
+        
+        self.send_dict_response(cookie)
+
+    elif self.path == '/order/manager/get/wait':
+        self.send_response(200)
+        self._send_cors_headers()
+        
+        self.send_header("Content-type", "text/html")
+        # self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        dataLength = int(self.headers["Content-Length"])
+        data = self.rfile.read(dataLength)
+        data = json.loads(data.decode())
+        
+        cookie = {}
+        print(data)
+        
+        manager = cur.execute(f"SELECT * FROM user WHERE user_id={data['user_id']} AND access_token={data['access_token']} AND (role='manager' OR role='admin')")
+        manager = manager.fetchone();
+
+        if manager is None: 
+            cookie['error'] = True
+            self.send_dict_response(cookie)
+            return;
+
+        res = cur.execute(f"SELECT * FROM u_order WHERE order_status='wait'")
+        res = res.fetchmany(25)
+        print(res)
+        if len(res) <= 0:
+            cookie['error'] = True
+        
+        else:
+            cookie['error'] = False
+            i = 0
+            for r in res:
+                cookie[f'{i}'] = r
+                i+=1
+                cookie['len'] = i
+            
+        
+        self.send_dict_response(cookie)
+    #-----------------------------------------------------------------------------------
+
+
+
+    elif self.path == '/becomed_driver/img/':
+        self.send_response(200)
+        self._send_cors_headers()
+        
+        self.send_header("Content-type", "application/json")
+        # self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        dataLength = int(self.headers["Content-Length"])
+        data = self.rfile.read(dataLength)
+        
+        print("DATA +")
+        print(data)
+        print("DATA -")
+
+        with open("test.bin", 'wb') as file:
+            file.write(data)
 
         cookie = {}
         cookie['error'] = True
 
+        import base64
+        with open("test.bin", 'rb') as output:
+            cookie['img'] = base64.b64encode(output.read()).decode('utf-8')
+            
         self.send_dict_response(cookie)
 
 

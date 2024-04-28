@@ -17,12 +17,12 @@ export default function Page1({ changeTheme, selectedTheme, lightTheme }) {
                     <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
                 </header>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: "3.1vh" }}>
-                    <Typography variant="h1">
+                    <Typography variant="h1" style={{color: "white"}}>
                         ПЕРЕВОЗИМ ГРУЗЫ
                     </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: "3.1vh" }}>
-                    <Typography variant="h5">
+                    <Typography variant="h5" style={{color: "white"}}>
                         В пределах города и не только
                     </Typography>
                 </Box>

@@ -69,124 +69,250 @@ export default function Profile() {
 
 
     function allOrders() {
-        axios.post("http://localhost:8000/order/get/all", values)
-            .then(res => {
-                console.log(res.data);
-                if (res.data.error) {
-                    setOrderData([]);
-                }
-                else {
-                    console.log();
-                    if (res.data == undefined) {
+        if (cookies["role"] == "user") {
+            axios.post("http://localhost:8000/order/get/all", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
                         setOrderData([]);
                     }
-
                     else {
-                        // console.log(res.data.content.length);
-                        var data = [];
-                        var i = 0;
-                        while (i < res.data.len) {
-                            console.log(i);
-                            console.log(res.data);
-                            data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
-                            i += 1;
-                            setOrderData(data);
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
                         }
                     }
-                }
-                //navigate('/')
-            })
+                    //navigate('/')
+                })
+        }
+        else if (cookies["role"] == "manager" || cookies["role"] == "admin") {
+            axios.post("http://localhost:8000/order/manager/get/all/", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
+                        setOrderData([]);
+                    }
+                    else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
+                        }
+                    }
+                    //navigate('/')
+                })
+        }
     }
 
     function waitOrders() {
-        axios.post("http://localhost:8000/order/get/wait", values)
-            .then(res => {
-                console.log(res.data);
-                if (res.data.error) {
-                    setOrderData([]);
-                }
-                else {
-                    console.log();
-                    if (res.data == undefined) {
+        if (cookies["role"] == "user") {
+            axios.post("http://localhost:8000/order/get/wait", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
                         setOrderData([]);
                     }
-
                     else {
-                        // console.log(res.data.content.length);
-                        var data = [];
-                        var i = 0;
-                        while (i < res.data.len) {
-                            console.log(i);
-                            console.log(res.data);
-                            data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
-                            i += 1;
-                            setOrderData(data);
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
                         }
                     }
-                }
-                //navigate('/')
-            })
+                    //navigate('/')
+                })
+        }
+        else if (cookies["role"] == "manager" || cookies["role"] == "admin") {
+            axios.post("http://localhost:8000/order/manager/get/wait", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
+                        setOrderData([]);
+                    }
+                    else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
+                        }
+                    }
+                    //navigate('/')
+                })
+        }
     }
 
     function in_progressOrders() {
-        axios.post("http://localhost:8000/order/get/in_progress", values)
-            .then(res => {
-                console.log(res.data);
-                if (res.data.error) {
-                    setOrderData([]);
-                }
-                else {
-                    console.log();
-                    if (res.data == undefined) {
+        if (cookies["role"] == "user") {
+            axios.post("http://localhost:8000/order/get/in_progress", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
                         setOrderData([]);
                     }
-
                     else {
-                        // console.log(res.data.content.length);
-                        var data = [];
-                        var i = 0;
-                        while (i < res.data.len) {
-                            console.log(i);
-                            console.log(res.data);
-                            data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
-                            i += 1;
-                            setOrderData(data);
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
                         }
                     }
-                }
-                //navigate('/')
-            })
+                    //navigate('/')
+                })
+        }
+        else if (cookies["role"] == "manager" || cookies["role"] == "admin") {
+            axios.post("http://localhost:8000/order/manager/get/in_progress", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
+                        setOrderData([]);
+                    }
+                    else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
+                        }
+                    }
+                    //navigate('/')
+                })
+        }
     }
 
     function doneOrders() {
-        axios.post("http://localhost:8000/order/get/done", values)
-            .then(res => {
-                console.log(res.data);
-                if (res.data.error) {
-                    setOrderData([]);
-                }
-                else {
-                    console.log();
-                    if (res.data == undefined) {
+        if (cookies["role"] == "user") {
+            axios.post("http://localhost:8000/order/get/done", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
                         setOrderData([]);
                     }
-
                     else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
 
-                        // console.log(res.data.content.length);
-                        var data = [];
-                        var i = 0;
-                        while (i < res.data.len) {
-                            console.log(i);
-                            console.log(res.data);
-                            data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
-                            i += 1;
-                            setOrderData(data);
+                        else {
+
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
                         }
                     }
-                }
-                //navigate('/')
-            })
+                    //navigate('/')
+                })
+        }
+        else if (cookies["role"] == "manager" || cookies["role"] == "admin") {
+            axios.post("http://localhost:8000/order/manager/get/done", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
+                        setOrderData([]);
+                    }
+                    else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
+                        }
+                    }
+                    //navigate('/')
+                })
+        }
+
     }
 
     useEffect(() => {

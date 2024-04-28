@@ -44,9 +44,20 @@ export default function PopUpWindow({trig}) {
     } = useForm(getFreshModel);
 
     const [cost, setCost] = useState(0);
+
+    const validate = () => {
+        let temp = {}
+        temp.tonnazh = !isNaN(values.tonnazh) ? "" : "Некоректный тоннаж"
+        temp.a = values.a != "" ? "" : "Это обязательное поле"
+        temp.b = values.b != "" ? "" : "Это обязательное поле"
+        setErrors(temp)
+        return Object.values(temp).every(x => x == "")
+    }
+
+
     const calculating = e => {
         e.preventDefault();
-        if (true)
+        if (validate())
             console.log("calculating");
             axios.post("http://localhost:8000/calculating/", values)
                 .then(res => {
@@ -54,7 +65,12 @@ export default function PopUpWindow({trig}) {
                         navigate('/')
                     }
                     else {
-                        setCost(Math.round(res.data.result * values.tonnazh * 7));
+                        if(!isNaN(Math.round(res.data.result * values.tonnazh * 7))){
+                            setCost(Math.round(res.data.result * values.tonnazh * 7));
+                        }
+                        else{
+                            setCost(0);
+                        }
                     }
                 })
                 .catch(err => {console.log(err);
@@ -78,7 +94,6 @@ export default function PopUpWindow({trig}) {
                                         component="img"
                                         alt="mashina"
                                         image="https://static.tildacdn.com/tild3433-3034-4465-b338-623263653534/img_bb.jpg"
-
                                     />
                                     <Box sx={{ marginLeft: "1.5vw", marginRight: "4.5vw" }}>
                                         <Typography variant="h4">
