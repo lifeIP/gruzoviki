@@ -26,20 +26,52 @@ import DataUsageIcon from '@mui/icons-material/DataUsage';
 
 export default function OrderEdit({ id, order_status }) {
     var m_id = id;
-    var m_order_status = order_status;
+    const[mOrderStatus, setOrderStatus] = useState(order_status);
 
-    const [cookies, setCookie, removeCookie] = useCookies(['role', 'login', 'user_id', 'access_token']);
     const navigate = useNavigate()
 
-    function editOrderStatus() {
-        console.log("editOrderStatus: ", m_order_status);
+    const [cookies, setCookie, removeCookie] = useCookies(['m_id', 'order_status', 'role', 'login', 'user_id', 'access_token']);
 
+    const getFreshModel = () => ({
+        user_id: cookies['user_id'],
+        access_token: cookies['access_token'],
+        m_id: m_id,
+        order_status: "wait",
+    })
+
+    const {
+        values,
+        setValues,
+        errors,
+        setErrors,
+        handleInputChange
+    } = useForm(getFreshModel);
+
+
+    function editOrderStatus(order_status) {
+        values.order_status = order_status;
+        setOrderStatus(order_status);
+        if(cookies["role"] == "manager"){
+            axios.post("http://localhost:8000//changeStatus/", values)
+            .then(res => {
+                console.log(res);
+            })
+        }
     }
+
     function editOrderInfo() {
-        console.log("editOrderInfo: ", m_order_status);
+        setCookie('m_id', m_id);
+        navigate("/orderChangeInfo");
     }
+
     function deleteOrder() {
-        console.log("deleteOrder: ", m_order_status);
+        console.log("deleteOrder: ", mOrderStatus);
+        if(cookies["role"] == "user"){
+
+        }
+        else if(cookies["role"] == "manager"){
+
+        }
     }
 
 
@@ -49,26 +81,33 @@ export default function OrderEdit({ id, order_status }) {
             navigate("/login/");
         }
         else if (cookies['role'] == 'manager') {
-            if (m_order_status === 'wait') {
+            if (mOrderStatus === 'wait') {
                 return (
-                    <Box sx={{float: "right"}}>
-                        <IconButton onClick={() => { editOrderStatus() }}><HourglassEmptyIcon /></IconButton>
+                    <Box sx={{ float: "right" }}>
+                        <IconButton onClick={() => { editOrderStatus("in_progress") }}><HourglassEmptyIcon /></IconButton>
+                        <IconButton onClick={() => { editOrderInfo() }}><EditIcon /></IconButton>
+                        <IconButton onClick={() => { deleteOrder() }}><DeleteIcon /></IconButton>
                     </Box>
                 );
             }
-            else if (m_order_status == 'in_progress') {
+            else if (mOrderStatus == 'in_progress') {
                 return (
-                    <IconButton onClick={() => { editOrderStatus() }}><DataUsageIcon /></IconButton>
+                    
+                    <Box sx={{ float: "right" }}>
+                        <IconButton onClick={() => { editOrderStatus("done") }}><DataUsageIcon /></IconButton>
+                    </Box>
                 );
             }
-            else if (m_order_status == 'done') {
+            else if (mOrderStatus == 'done') {
                 return (
-                    <IconButton onClick={() => { editOrderStatus() }}><OfflinePinIcon /></IconButton>
+                    <Box sx={{ float: "right" }}>
+                        <IconButton onClick={() => { editOrderStatus("wait") }}><OfflinePinIcon /></IconButton>
+                    </Box>
                 );
             }
         }
         else if (cookies['role'] == 'admin') {
-            if (m_order_status === 'wait') {
+            if (mOrderStatus === 'wait') {
                 return (
                     <Box>
                         <IconButton onClick={() => { editOrderStatus() }}><HourglassEmptyIcon /></IconButton>
@@ -77,19 +116,19 @@ export default function OrderEdit({ id, order_status }) {
                     </Box>
                 );
             }
-            else if (m_order_status == 'in_progress') {
+            else if (mOrderStatus == 'in_progress') {
                 return (
                     <IconButton onClick={() => { editOrderStatus() }}><DataUsageIcon /></IconButton>
                 );
             }
-            else if (m_order_status == 'done') {
+            else if (mOrderStatus == 'done') {
                 return (
                     <IconButton onClick={() => { editOrderStatus() }}><OfflinePinIcon /></IconButton>
                 );
             }
         }
         else if (cookies['role'] == 'user') {
-            if (m_order_status === 'wait') {
+            if (mOrderStatus === 'wait') {
                 return (
                     <Box>
                         <IconButton onClick={() => { editOrderStatus() }}><HourglassEmptyIcon /></IconButton>
@@ -98,23 +137,23 @@ export default function OrderEdit({ id, order_status }) {
                     </Box>
                 );
             }
-            else if (m_order_status == 'in_progress') {
+            else if (mOrderStatus == 'in_progress') {
                 return (
                     <Box>
-                    <IconButton onClick={() => { editOrderStatus() }}><DataUsageIcon /></IconButton>
+                        <IconButton onClick={() => { editOrderStatus() }}><DataUsageIcon /></IconButton>
                     </Box>
                 );
             }
-            else if (m_order_status == 'done') {
+            else if (mOrderStatus == 'done') {
                 return (
                     <Box>
-                    <IconButton onClick={() => { editOrderStatus() }}><OfflinePinIcon /></IconButton>
+                        <IconButton onClick={() => { editOrderStatus() }}><OfflinePinIcon /></IconButton>
                     </Box>
                 );
             }
         }
         else if (cookies['role'] == 'driver') {
-            if (m_order_status === 'wait') {
+            if (mOrderStatus === 'wait') {
                 return (
                     <Box>
                         <IconButton onClick={() => { editOrderStatus() }}><HourglassEmptyIcon /></IconButton>
@@ -122,12 +161,12 @@ export default function OrderEdit({ id, order_status }) {
                     </Box>
                 );
             }
-            else if (m_order_status == 'in_progress') {
+            else if (mOrderStatus == 'in_progress') {
                 return (
                     <IconButton onClick={() => { editOrderStatus() }}><DataUsageIcon /></IconButton>
                 );
             }
-            else if (m_order_status == 'done') {
+            else if (mOrderStatus == 'done') {
                 return (
                     <IconButton onClick={() => { editOrderStatus() }}><OfflinePinIcon /></IconButton>
                 );
@@ -139,7 +178,7 @@ export default function OrderEdit({ id, order_status }) {
 
 
     return (
-        <Box sx={{float: "right", marginRight: "1.5vw"}}>
+        <Box sx={{ float: "right", marginRight: "1.5vw" }}>
             <OrderStatus />
         </Box>
     );

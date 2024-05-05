@@ -26,6 +26,7 @@ import Login from "./components/Form/Login";
 import Order from "./components/Form/Order";
 import Registration from "./components/Form/Registration";
 import ChangeUserData from "./components/Form/ChangeUserData";
+import OrderChangeInfo from "./components/Profile/components/OrderChangeInfo";
 
 const darkTheme = createTheme({
   palette: {
@@ -77,6 +78,13 @@ function App() {
               <div>
                 <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
                 <Registration />
+                <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+              </div>
+            } />
+            <Route path="/orderChangeInfo" element={
+              <div>
+                <MyHeader selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
+                <OrderChangeInfo />
                 <MyFooter selectedTheme={selectedTheme == lightTheme ? true : false} changeTheme={changeTheme} />
               </div>
             } />

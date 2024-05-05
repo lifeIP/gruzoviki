@@ -127,6 +127,35 @@ export default function Profile() {
                     //navigate('/')
                 })
         }
+        else if (cookies["role"] == "driver") {
+            axios.post("http://localhost:8000/order/driver/get/all/", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
+                        setOrderData([]);
+                    }
+                    else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
+                        }
+                    }
+                    //navigate('/')
+                })
+        }
     }
 
     function waitOrders() {
@@ -161,6 +190,35 @@ export default function Profile() {
         }
         else if (cookies["role"] == "manager" || cookies["role"] == "admin") {
             axios.post("http://localhost:8000/order/manager/get/wait", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
+                        setOrderData([]);
+                    }
+                    else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
+                        }
+                    }
+                    //navigate('/')
+                })
+        }
+        else if (cookies["role"] == "driver") {
+            axios.post("http://localhost:8000/order/driver/get/wait/", values)
                 .then(res => {
                     console.log(res.data);
                     if (res.data.error) {
@@ -249,6 +307,35 @@ export default function Profile() {
                     //navigate('/')
                 })
         }
+        else if (cookies["role"] == "driver") {
+            axios.post("http://localhost:8000/order/driver/get/in_progress/", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
+                        setOrderData([]);
+                    }
+                    else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
+                        }
+                    }
+                    //navigate('/')
+                })
+        }
     }
 
     function doneOrders() {
@@ -297,6 +384,35 @@ export default function Profile() {
 
                         else {
 
+                            // console.log(res.data.content.length);
+                            var data = [];
+                            var i = 0;
+                            while (i < res.data.len) {
+                                console.log(i);
+                                console.log(res.data);
+                                data.push({ id: res?.data[i][0], name: res?.data[i][3], point_a: res?.data[i][5], point_b: res?.data[i][6], order_status: res?.data[i][8] });
+                                i += 1;
+                                setOrderData(data);
+                            }
+                        }
+                    }
+                    //navigate('/')
+                })
+        }
+        else if (cookies["role"] == "driver") {
+            axios.post("http://localhost:8000/order/driver/get/done/", values)
+                .then(res => {
+                    console.log(res.data);
+                    if (res.data.error) {
+                        setOrderData([]);
+                    }
+                    else {
+                        console.log();
+                        if (res.data == undefined) {
+                            setOrderData([]);
+                        }
+
+                        else {
                             // console.log(res.data.content.length);
                             var data = [];
                             var i = 0;
